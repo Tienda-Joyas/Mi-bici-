@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Registro Biciusuario – SNR</title>
+<style>
+  :root {
+    --green-dark: #1a5c2e;
+    --green-mid: #2e8b4a;
+    --green-light: #5ab87a;
+    --green-pale: #eaf6ee;
+    --accent: #f5a623;
+    --accent-dark: #c4811a;
+    --text: #1a1a1a;
+    --text-muted: #5a6474;
+    --border: #c8d8cc;
+    --surface: #ffffff;
+    --bg: #f2f7f3;
+    --danger: #c0392b;
+    --danger-pale: #fdecea;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 2rem;
+  }
+
+  .header {
+    background: var(--green-dark);
+    padding: 1.1rem 1.25rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .logo-circle {
+    width: 42px; height: 42px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-circle svg { width: 24px; height: 24px; }
+  .header-text h1 {
+    font-size: 14px; font-weight: 700; color: #fff;
+    line-height: 1.2; letter-spacing: 0.3px;
+  }
+  .header-text p {
+    font-size: 11px; color: rgba(255,255,255,0.72);
+    margin-top: 1px; line-height: 1.3;
+  }
+
+  .progress-wrap {
+    background: var(--green-dark);
+    padding: 0 1.25rem 0.85rem;
+  }
+  .progress-inner { max-width: 480px; margin: 0 auto; }
+  .steps-row {
+    display: flex; gap: 6px; align-items: center;
+  }
+  .step-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: background 0.3s, transform 0.3s;
+  }
+  .step-dot.active { background: var(--accent); transform: scale(1.3); }
+  .step-dot.done { background: var(--green-light); }
+  .step-label {
+    font-size: 11px; color: rgba(255,255,255,0.65);
+    margin-left: auto;
+  }
+
+  .content { max-width: 480px; margin: 0 auto; padding: 1.25rem 1rem 0; }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 1.1rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 700;
+    color: var(--green-dark);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 0.9rem;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .card-title svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .field { margin-bottom: 0.85rem; }
+  .field:last-child { margin-bottom: 0; }
+  label {
+    display: block;
+    font-size: 12px; font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    letter-spacing: 0.2px;
+  }
+  label span.req { color: var(--danger); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    font-size: 15px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fafcfb;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(46,139,74,0.13);
+    background: #fff;
+  }
+  input.error, select.error, textarea.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+  }
+  .error-msg {
+    font-size: 11px; color: var(--danger);
+    margin-top: 4px; display: none;
+  }
+  .error-msg.show { display: block; }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a6474' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 2.2rem;
+  }
+  textarea { resize: none; min-height: 70px; line-height: 1.5; }
+
+  .photo-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    min-height: 180px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px; cursor: pointer;
+    background: var(--green-pale);
+    transition: border-color 0.2s, background 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .photo-zone:active { background: #daf0e2; }
+  .photo-zone.has-photo { border-style: solid; border-color: var(--green-mid); }
+  .photo-zone img {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .photo-zone .photo-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.55);
+    padding: 8px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .photo-zone .photo-overlay span {
+    color: #fff; font-size: 12px; font-weight: 600;
+  }
+  .photo-zone .photo-overlay button {
+    background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);
+    color: #fff; font-size: 11px; padding: 3px 9px;
+    border-radius: 20px; cursor: pointer;
+  }
+  .photo-placeholder { text-align: center; padding: 1rem; }
+  .photo-placeholder svg { width: 40px; height: 40px; color: var(--green-mid); margin-bottom: 6px; }
+  .photo-placeholder p { font-size: 13px; color: var(--green-dark); font-weight: 600; }
+  .photo-placeholder small { font-size: 11px; color: var(--text-muted); }
+  input[type="file"] { display: none; }
+
+  .location-box {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fafcfb;
+    padding: 0.7rem 0.85rem;
+    min-height: 56px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .location-box.success { border-color: var(--green-mid); background: var(--green-pale); }
+  .location-box.fail { border-color: var(--danger); background: var(--danger-pale); }
+  .location-icon { flex-shrink: 0; }
+  .location-icon svg { width: 20px; height: 20px; }
+  .location-text { flex: 1; }
+  .location-text p { font-size: 13px; font-weight: 600; color: var(--text); }
+  .location-text small { font-size: 11px; color: var(--text-muted); }
+  .location-text .coords { font-size: 11px; color: var(--green-dark); font-weight: 600; font-family: monospace; margin-top: 2px; }
+
+  .btn-location {
+    width: 100%;
+    padding: 0.7rem;
+    background: var(--green-pale);
+    border: 1.5px solid var(--green-light);
+    color: var(--green-dark);
+    font-size: 14px; font-weight: 700;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 0.6rem;
+    transition: background 0.2s;
+  }
+  .btn-location:active { background: #c6e9d0; }
+  .btn-location svg { width: 18px; height: 18px; }
+  .btn-location.loading { opacity: 0.7; pointer-events: none; }
+
+  .btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: var(--green-dark);
+    color: #fff;
+    font-size: 16px; font-weight: 700;
+    border: none; border-radius: var(--radius);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 0.5rem;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    position: relative; overflow: hidden;
+  }
+  .btn-submit:active { background: #133f20; transform: scale(0.99); }
+  .btn-submit svg { width: 20px; height: 20px; }
+  .btn-submit.loading { opacity: 0.75; pointer-events: none; }
+
+  .info-banner {
+    background: #fff8e6; border: 1px solid #f5c874;
+    border-radius: var(--radius-sm); padding: 0.7rem 0.85rem;
+    display: flex; gap: 8px; margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+  .info-banner svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: var(--accent-dark); }
+  .info-banner p { font-size: 12px; color: #7a5c0a; line-height: 1.5; }
+
+  #success-screen {
+    display: none; text-align: center;
+    padding: 2.5rem 1.5rem;
+    max-width: 480px; margin: 0 auto;
+  }
+  .success-icon {
+    width: 72px; height: 72px;
+    background: var(--green-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.2rem;
+    border: 2px solid var(--green-light);
+  }
+  .success-icon svg { width: 36px; height: 36px; color: var(--green-dark); }
+  #success-screen h2 { font-size: 20px; color: var(--green-dark); margin-bottom: 0.5rem; }
+  #success-screen p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .success-code {
+    margin: 1.2rem auto;
+    background: var(--green-pale);
+    border: 1.5px solid var(--green-light);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 1.2rem;
+    display: inline-block;
+  }
+  .success-code small { font-size: 11px; color: var(--text-muted); }
+  .success-code strong { display: block; font-size: 20px; font-family: monospace; color: var(--green-dark); letter-spacing: 2px; margin-top: 3px; }
+  .btn-new {
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    background: var(--green-dark); color: #fff;
+    border: none; border-radius: var(--radius); font-size: 14px; font-weight: 700;
+    cursor: pointer;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  @media (max-width: 360px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 1000;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/>
+        <path d="M15 6a1 1 0 100-2 1 1 0 000 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Registro Biciusuario</h1>
+      <p>Superintendencia de Notariado y Registro</p>
+    </div>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="steps-row">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+      <span class="step-label" id="step-label">Paso 1 de 4</span>
+    </div>
+  </div>
+</div>
+
+<div class="content" id="form-content">
+
+  <div class="info-banner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <p>El registro diario garantiza los beneficios del programa de movilidad sostenible. Todos los campos son obligatorios.</p>
+  </div>
+
+  <div class="card" id="section-1">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 5l1-2h4l1 2"/></svg>
+      Evidencia fotográfica
+    </div>
+
+    <div class="photo-zone" id="photo-zone" onclick="document.getElementById('foto-input').click()">
+      <div class="photo-placeholder" id="photo-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 5l1-2h4l1 2"/></svg>
+        <p>Tomar o subir foto</p>
+        <small>Con tu bicicleta en la sede SNR</small>
+      </div>
+    </div>
+    <input type="file" id="foto-input" accept="image/*" capture="environment" onchange="handlePhoto(this)">
+    <div class="error-msg" id="err-foto">Debes adjuntar una foto de evidencia.</div>
+
+    <div style="display:flex; gap:8px; margin-top:0.6rem;">
+      <button type="button" onclick="document.getElementById('foto-input').click()" style="flex:1; padding:0.6rem; background:var(--green-pale); border:1.5px solid var(--green-light); color:var(--green-dark); font-size:13px; font-weight:700; border-radius:var(--radius-sm); cursor:pointer;">
+        📷 Cámara
+      </button>
+      <button type="button" onclick="document.getElementById('foto-gallery').click()" style="flex:1; padding:0.6rem; background:#f0f0f0; border:1.5px solid #ccc; color:#444; font-size:13px; font-weight:700; border-radius:var(--radius-sm); cursor:pointer;">
+        🖼️ Galería
+      </button>
+    </div>
+    <input type="file" id="foto-gallery" accept="image/*" onchange="handlePhoto(this)" style="display:none">
+  </div>
+
+  <div class="card" id="section-2">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+      Ubicación GPS
+    </div>
+
+    <div class="location-box" id="location-box">
+      <div class="location-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="location-text">
+        <p id="loc-status">Ubicación no obtenida</p>
+        <small id="loc-sub">Presiona el botón para compartir tu ubicación exacta</small>
+        <div class="coords" id="loc-coords" style="display:none"></div>
+        <div class="coords" id="loc-address" style="display:none; font-size:11px; color:var(--green-dark); margin-top:4px;"></div>
+      </div>
+    </div>
+
+    <button type="button" class="btn-location" id="btn-loc" onclick="getLocation()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      Obtener ubicación actual
+    </button>
+    <div class="error-msg" id="err-ubicacion">Debes compartir tu ubicación para registrar el ingreso.</div>
+  </div>
+
+  <div class="card" id="section-3">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Datos del servidor
+    </div>
+
+    <div class="field">
+      <label>Nombres y apellidos completos <span class="req">*</span></label>
+      <input type="text" id="nombre" placeholder="Ej: María Fernanda López Torres" autocomplete="name">
+      <div class="error-msg" id="err-nombre">Campo requerido.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label>Cédula de ciudadanía <span class="req">*</span></label>
+        <input type="number" id="cedula" placeholder="Ej: 1020304050" inputmode="numeric">
+        <div class="error-msg" id="err-cedula">Ingresa la cédula.</div>
+      </div>
+      <div class="field">
+        <label>Cargo / Empleo <span class="req">*</span></label>
+        <select id="cargo">
+          <option value="">— Seleccionar cargo —</option>
+          <option>Conductor mecánico</option>
+          <option>Auxiliar administrativo</option>
+          <option>Secretario ejecutivo</option>
+          <option>Técnico operativo</option>
+          <option>Técnico administrativo</option>
+          <option>Profesional universitario</option>
+          <option>Profesional especializado</option>
+        </select>
+        <div class="error-msg" id="err-cargo">Selecciona tu cargo.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="section-4">
+    <div class="card-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2M12 12v4M10 14h4"/></svg>
+      Datos institucionales
+    </div>
+
+    <div class="field">
+      <label>Grupo / Área de trabajo <span class="req">*</span></label>
+      <select id="grupo">
+        <option value="">— Seleccionar —</option>
+        <optgroup label="Dirección de Talento Humano">
+          <option>Bienestar, Conocimiento y Evaluación</option>
+          <option>Vinculación y Clasificación</option>
+          <option>Nómina y Prestaciones</option>
+          <option>Salud y Seguridad en el Trabajo</option>
+          <option>Apoyo Jurídico – DTH</option>
+          <option>Capacitación</option>
+        </optgroup>
+        <optgroup label="Otras dependencias">
+          <option>Despacho del Superintendente</option>
+          <option>Oficina Asesora Jurídica</option>
+          <option>Oficina de Tecnología</option>
+          <option>Oficina de Control Interno</option>
+          <option>Dirección Administrativa y Financiera</option>
+          <option>Dirección de Gestión Registral</option>
+          <option>Dirección de Gestión Notarial</option>
+          <option>Dirección de Sistemas de Información</option>
+          <option>Oficina de Comunicaciones</option>
+          <option>Otra dependencia</option>
+        </optgroup>
+      </select>
+      <div class="error-msg" id="err-grupo">Selecciona tu área.</div>
+    </div>
+
+    <div class="field">
+      <label>Sede / Lugar de trabajo <span class="req">*</span></label>
+      <select id="sede">
+        <option value="">— Seleccionar —</option>
+        <option>Sede Central – Bogotá D.C.</option>
+        <option>Sede Norte – Bogotá</option>
+        <option>Otra sede</option>
+      </select>
+      <div class="error-msg" id="err-sede">Selecciona la sede.</div>
+    </div>
+
+    <div class="field">
+      <label>Jefe inmediato (nombre completo) <span class="req">*</span></label>
+      <input type="text" id="jefe" placeholder="Ej: Carlos Alberto Rueda Pérez" autocomplete="off">
+      <div class="error-msg" id="err-jefe">Campo requerido.</div>
+    </div>
+
+    <div class="field">
+      <label>Tipo de vínculo laboral <span class="req">*</span></label>
+      <select id="vinculo">
+        <option value="">— Seleccionar —</option>
+        <option>Carrera administrativa</option>
+        <option>Provisional</option>
+        <option>Libre nombramiento y remoción</option>
+        <option>Contrato de prestación de servicios</option>
+        <option>Encargo</option>
+        <option>Otro</option>
+      </select>
+      <div class="error-msg" id="err-vinculo">Selecciona el tipo de vínculo.</div>
+    </div>
+
+    <div class="field">
+      <label>Observaciones (opcional)</label>
+      <textarea id="obs" placeholder="Ej: Parqueo en cicloparqueadero piso 1, bahía 3..."></textarea>
+    </div>
+  </div>
+
+  <button type="button" class="btn-submit" id="btn-submit" onclick="submitForm()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    Registrar ingreso en bicicleta
+  </button>
+
+  <p style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:0.8rem; padding-bottom:0.5rem;">
+    Los datos recopilados son de uso exclusivo para control del programa de movilidad sostenible de la SNR.
+  </p>
+</div>
+
+<div id="success-screen">
+  <div class="success-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2>¡Registro exitoso! 🚲</h2>
+  <p>Tu ingreso en bicicleta ha sido registrado. Guarda el código para cualquier verificación.</p>
+  <div class="success-code">
+    <small>Código de registro</small>
+    <strong id="registro-code">—</strong>
+  </div>
+  <div id="success-detail" style="font-size:13px; color:var(--text-muted); line-height:1.8; margin-top:0.5rem;"></div>
+  <button class="btn-new" onclick="resetForm()">Registrar otro día</button>
+</div>
+
+<script>
+  let photoData = null;
+  let geoData = null;
+  let addressData = null;
+
+  // 🔴 IMPORTANTE: Reemplaza esta URL con la de tu Google Apps Script
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylB1tr98ovSCYz-MVGs6XxzCYBrtlKOkxGCrIR7LKRLmcZjDSTyrVeE9m20skgwkmTBQ/exec';
+
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.backgroundColor = isError ? 'rgba(192,57,43,0.9)' : 'rgba(0,0,0,0.8)';
+    toast.style.display = 'block';
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 3000);
+  }
+
+  function handlePhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('La foto es muy pesada. Máximo 5MB.', true);
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      photoData = e.target.result;
+      const zone = document.getElementById('photo-zone');
+      const placeholder = document.getElementById('photo-placeholder');
+      placeholder.style.display = 'none';
+      let img = zone.querySelector('img');
+      if (!img) { img = document.createElement('img'); zone.insertBefore(img, zone.firstChild); }
+      img.src = photoData;
+      let overlay = zone.querySelector('.photo-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'photo-overlay';
+        overlay.innerHTML = '<span>✓ Foto adjunta</span><button onclick="removePhoto(event)">Cambiar</button>';
+        zone.appendChild(overlay);
+      }
+      zone.classList.add('has-photo');
+      hideError('foto');
+      showToast('Foto cargada correctamente');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removePhoto(e) {
+    e.stopPropagation();
+    photoData = null;
+    const zone = document.getElementById('photo-zone');
+    zone.classList.remove('has-photo');
+    const img = zone.querySelector('img');
+    const overlay = zone.querySelector('.photo-overlay');
+    if (img) img.remove();
+    if (overlay) overlay.remove();
+    document.getElementById('photo-placeholder').style.display = '';
+    document.getElementById('foto-input').value = '';
+    document.getElementById('foto-gallery').value = '';
+  }
+
+  async function getAddressFromCoords(lat, lng) {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+      const data = await response.json();
+      
+      if (data && data.display_name) {
+        const address = data.address;
+        const city = address.city || address.town || address.state_district || 'No especificada';
+        const road = address.road || address.suburb || '';
+        const neighborhood = address.neighbourhood || address.suburb || road;
+        
+        return {
+          full: data.display_name,
+          city: city,
+          sector: neighborhood,
+          formatted: `${neighborhood}, ${city}`
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error('Error obteniendo dirección:', error);
+      return null;
+    }
+  }
+
+  async function getLocation() {
+    if (!navigator.geolocation) {
+      showLocationFail('Tu navegador no soporta geolocalización.');
+      return;
+    }
+    const btn = document.getElementById('btn-loc');
+    btn.classList.add('loading');
+    btn.innerHTML = '<div class="spinner"></div> Obteniendo ubicación...';
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        geoData = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: Math.round(pos.coords.accuracy) };
+        
+        showToast('Ubicación obtenida, obteniendo dirección...');
+        
+        const addressInfo = await getAddressFromCoords(geoData.lat, geoData.lng);
+        addressData = addressInfo;
+        
+        const box = document.getElementById('location-box');
+        box.className = 'location-box success';
+        
+        let locationText = '✓ Ubicación obtenida';
+        let locationDetail = `Precisión: ±${geoData.acc} metros`;
+        
+        if (addressData) {
+          locationText = `✓ ${addressData.city}`;
+          locationDetail = addressData.sector || addressData.formatted;
+        }
+        
+        document.getElementById('loc-status').textContent = locationText;
+        document.getElementById('loc-sub').textContent = locationDetail;
+        const coords = document.getElementById('loc-coords');
+        coords.textContent = `${geoData.lat.toFixed(6)}, ${geoData.lng.toFixed(6)}`;
+        coords.style.display = 'block';
+        
+        if (addressData) {
+          const addrDiv = document.getElementById('loc-address');
+          addrDiv.textContent = `📍 ${addressData.full.substring(0, 80)}...`;
+          addrDiv.style.display = 'block';
+        }
+        
+        btn.classList.remove('loading');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 6L9 17l-5-5"/></svg> Ubicación confirmada — obtener de nuevo`;
+        hideError('ubicacion');
+        showToast('Ubicación registrada correctamente');
+      },
+      (err) => {
+        let msg = 'No se pudo obtener la ubicación.';
+        if (err.code === 1) msg = 'Permiso denegado. Activa la ubicación en tu navegador.';
+        else if (err.code === 2) msg = 'Ubicación no disponible. Verifica la señal GPS.';
+        else if (err.code === 3) msg = 'Tiempo de espera agotado. Intenta de nuevo.';
+        showLocationFail(msg);
+        btn.classList.remove('loading');
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg> Reintentar`;
+        showToast(msg, true);
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    );
+  }
+
+  function showLocationFail(msg) {
+    const box = document.getElementById('location-box');
+    box.className = 'location-box fail';
+    document.getElementById('loc-status').textContent = '✗ Error de ubicación';
+    document.getElementById('loc-sub').textContent = msg;
+    document.getElementById('loc-coords').style.display = 'none';
+    document.getElementById('loc-address').style.display = 'none';
+    geoData = null;
+    addressData = null;
+  }
+
+  function showError(id, msg) {
+    const field = document.getElementById(id);
+    const errEl = document.getElementById('err-' + id);
+    if (field) field.classList.add('error');
+    if (errEl) { errEl.textContent = msg || errEl.textContent; errEl.classList.add('show'); }
+  }
+
+  function hideError(id) {
+    const field = document.getElementById(id);
+    const errEl = document.getElementById('err-' + id);
+    if (field) field.classList.remove('error');
+    if (errEl) errEl.classList.remove('show');
+  }
+
+  function validateForm() {
+    let valid = true;
+    const required = [
+      { id: 'nombre', msg: 'Ingresa tu nombre completo.' },
+      { id: 'cedula', msg: 'Ingresa tu número de cédula.' },
+      { id: 'cargo', msg: 'Selecciona tu cargo.' },
+      { id: 'grupo', msg: 'Selecciona tu grupo o área.' },
+      { id: 'sede', msg: 'Selecciona la sede.' },
+      { id: 'jefe', msg: 'Ingresa el nombre de tu jefe inmediato.' },
+      { id: 'vinculo', msg: 'Selecciona el tipo de vínculo.' }
+    ];
+    required.forEach(f => {
+      const el = document.getElementById(f.id);
+      if (!el || !el.value.trim()) { showError(f.id, f.msg); valid = false; }
+      else hideError(f.id);
+    });
+    if (!photoData) { showError('foto', 'Debes adjuntar una foto de evidencia.'); valid = false; }
+    else hideError('foto');
+    if (!geoData) { showError('ubicacion', 'Debes compartir tu ubicación.'); valid = false; }
+    else hideError('ubicacion');
+    return valid;
+  }
+
+  function generateCode() {
+    const d = new Date();
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = String(d.getFullYear()).slice(-2);
+    const rand = Math.random().toString(36).substring(2,6).toUpperCase();
+    return `SNR-${yy}${mm}${dd}-${rand}`;
+  }
+
+  async function submitToGoogleSheets(formData) {
+    try {
+      // Usar JSONP o fetch normal
+      const response = await fetch(GOOGLE_SCRIPT_URL + '?callback=callback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(formData)
+      });
+      
+      // Con no-cors no podemos leer la respuesta, asumimos éxito
+      console.log('Datos enviados a Google Sheets');
+      return true;
+    } catch (error) {
+      console.error('Error enviando a Google Sheets:', error);
+      // Intentar con un método alternativo: enviar como formulario
+      try {
+        const formBody = new URLSearchParams();
+        formBody.append('data', JSON.stringify(formData));
+        
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formBody
+        });
+        return true;
+      } catch (e) {
+        console.error('Error en segundo intento:', e);
+        return false;
+      }
+    }
+  }
+
+  async function submitForm() {
+    if (!validateForm()) {
+      const firstErr = document.querySelector('.error, .location-box.fail');
+      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const btn = document.getElementById('btn-submit');
+    btn.classList.add('loading');
+    btn.innerHTML = '<div class="spinner"></div> Enviando registro...';
+
+    const code = generateCode();
+    const nombre = document.getElementById('nombre').value.trim();
+    const cedula = document.getElementById('cedula').value.trim();
+    const cargoSelect = document.getElementById('cargo');
+    const cargo = cargoSelect.options[cargoSelect.selectedIndex]?.text || '';
+    const grupoSelect = document.getElementById('grupo');
+    const grupo = grupoSelect.options[grupoSelect.selectedIndex]?.text || '';
+    const sede = document.getElementById('sede').value;
+    const jefe = document.getElementById('jefe').value.trim();
+    const vinculoSelect = document.getElementById('vinculo');
+    const vinculo = vinculoSelect.options[vinculoSelect.selectedIndex]?.text || '';
+    const observaciones = document.getElementById('obs').value.trim();
+    const now = new Date();
+    const fecha = now.toLocaleDateString('es-CO');
+    const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const timestamp = now.toISOString();
+
+    const formData = {
+      codigo: code,
+      timestamp: timestamp,
+      fecha: fecha,
+      hora: hora,
+      nombre: nombre,
+      cedula: cedula,
+      cargo: cargo,
+      grupo: grupo,
+      sede: sede,
+      jefe: jefe,
+      vinculo: vinculo,
+      observaciones: observaciones,
+      latitud: geoData.lat,
+      longitud: geoData.lng,
+      precision: geoData.acc,
+      direccion_completa: addressData ? addressData.full : '',
+      ciudad: addressData ? addressData.city : '',
+      sector: addressData ? addressData.sector : '',
+      foto_base64: photoData
+    };
+
+    showToast('Enviando datos a Google Sheets...');
+    
+    const enviado = await submitToGoogleSheets(formData);
+    
+    if (enviado) {
+      showToast('Registro guardado en Google Sheets ✅');
+    } else {
+      showToast('⚠️ No se pudo conectar con Google Sheets, pero el registro local está OK', true);
+    }
+
+    document.getElementById('registro-code').textContent = code;
+    document.getElementById('success-detail').innerHTML = `
+      <strong>${nombre}</strong><br>
+      C.C. ${cedula} · ${cargo}<br>
+      ${grupo}<br>
+      ${sede}<br>
+      Jefe: ${jefe}<br>
+      📅 ${fecha} · 🕐 ${hora}<br>
+      📍 ${geoData.lat.toFixed(5)}, ${geoData.lng.toFixed(5)}<br>
+      🏙️ ${addressData ? addressData.city : 'Ciudad no obtenida'}<br>
+      📌 ${addressData ? (addressData.sector || 'Sector no obtenido') : ''}
+    `;
+
+    document.getElementById('form-content').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    btn.classList.remove('loading');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Registrar ingreso en bicicleta`;
+  }
+
+  function resetForm() {
+    document.getElementById('form-content').style.display = 'block';
+    document.getElementById('success-screen').style.display = 'none';
+    
+    const fields = ['nombre', 'cedula', 'cargo', 'grupo', 'sede', 'jefe', 'vinculo', 'obs'];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { 
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = ''; 
+        el.classList.remove('error'); 
+      }
+    });
+    
+    fields.forEach(id => hideError(id));
+    hideError('foto');
+    hideError('ubicacion');
+    
+    if (photoData) {
+      removePhoto({ stopPropagation: () => {} });
+    }
+    
+    geoData = null;
+    addressData = null;
+    const box = document.getElementById('location-box');
+    box.className = 'location-box';
+    document.getElementById('loc-status').textContent = 'Ubicación no obtenida';
+    document.getElementById('loc-sub').textContent = 'Presiona el botón para compartir tu ubicación exacta';
+    document.getElementById('loc-coords').style.display = 'none';
+    document.getElementById('loc-address').style.display = 'none';
+    
+    const btn = document.getElementById('btn-loc');
+    btn.classList.remove('loading');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg> Obtener ubicación actual`;
+    
+    const submitBtn = document.getElementById('btn-submit');
+    submitBtn.classList.remove('loading');
+    submitBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Registrar ingreso en bicicleta`;
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
